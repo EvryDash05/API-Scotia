@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiffGenerationConfig" isInitGenerateDdl="true">
+    <option name="initGenerateDdl" value="true" />
+    <option name="sourceModelValue" value="api-scotia:api-scotia" />
+    <option name="targetDbValue" value="0991ec94-a9b1-4194-96b7-4defdaaf1dd7" />
+  </component>
+</project>
