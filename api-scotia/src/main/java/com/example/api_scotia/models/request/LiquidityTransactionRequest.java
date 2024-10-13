@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 
 public class LiquidityTransactionRequest {
-    private String cardId;
+    private Long numberCard;
     private BigDecimal amount;
     private String status;
 }
