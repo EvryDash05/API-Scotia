@@ -14,12 +14,13 @@ import com.example.api_scotia.repository.LiquidityTransactionRepository;
 import com.example.api_scotia.service.LiquidityTransactionService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
+@Service
 @RequiredArgsConstructor
 public class LiquidityTransactionBusiness implements LiquidityTransactionService {
 
