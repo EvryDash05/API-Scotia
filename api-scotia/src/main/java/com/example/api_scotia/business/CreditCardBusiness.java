@@ -15,10 +15,12 @@ import com.example.api_scotia.repository.CustomerRepository;
 import com.example.api_scotia.service.CreditCardService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
 public class CreditCardBusiness implements CreditCardService {
     private final CreditCardRepository creditCardRepository;
