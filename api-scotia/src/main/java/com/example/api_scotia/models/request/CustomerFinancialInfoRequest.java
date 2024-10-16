@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerFinancialInfoRequest {
-    private String clientId;
     private String jobType;
     private BigDecimal monthlyIncome;
     private BigDecimal fixedExpenses;

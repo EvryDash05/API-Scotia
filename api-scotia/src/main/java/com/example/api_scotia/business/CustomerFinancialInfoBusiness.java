@@ -11,9 +11,11 @@ import com.example.api_scotia.repository.CustomerFinancialInfoRepository;
 import com.example.api_scotia.repository.CustomerRepository;
 import com.example.api_scotia.service.CustomerFinancialInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 @RequiredArgsConstructor
 public class CustomerFinancialInfoBusiness implements CustomerFinancialInfoService {
 
@@ -21,21 +23,17 @@ public class CustomerFinancialInfoBusiness implements CustomerFinancialInfoServi
     private final CustomerRepository customerRepository;
 
     @Override
-    public void createCustomerFinancialInfo(CustomerFinancialInfoRequest request) {
-        Optional<CustomerEntity> findCustomer = this.customerRepository.findById(request.getClientId());
-        if(findCustomer.isPresent()) {
+    public void createCustomerFinancialInfo(CustomerFinancialInfoRequest request,CustomerEntity customerEntity)  {
+
             CustomerFinancialInfoEntity newInfo= CustomerFinancialInfoEntity.builder()
                     .customerFinancialInfoId(Utils.generateRandomId(Identifier.FINANCIAL_INFO.getValue()))
                     .jobType(request.getJobType())
                     .monthlyIncome(request.getMonthlyIncome())
                     .fixedExpenses(request.getFixedExpenses())
                     .excessPayment(request.getExcessPayment())
-                    .customer(findCustomer.get())
+                    .customer(customerEntity)
                     .build();
             this.customerFinancialInfoRepository.save(newInfo);
-        } else {
-            throw new BusinessException(ErrorConstant.NOT_FOUND_CODE, ErrorConstant.CUSTOMER_NOT_FOUND);
-        }
 
     }
 
@@ -52,5 +50,5 @@ public class CustomerFinancialInfoBusiness implements CustomerFinancialInfoServi
         }
      this.customerFinancialInfoRepository.delete(findCustomer.get().getCustomerFinancialInfo());
     }
-    
+
 }
