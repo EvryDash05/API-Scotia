@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ApiScotiaApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiScotiaApplication.class, args);
+	public static void main(String[] args) {SpringApplication.run(ApiScotiaApplication.class, args);
 	}
 
 }
