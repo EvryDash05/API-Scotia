@@ -6,6 +6,7 @@ import com.example.api_scotia.commons.utils.Utils;
 import com.example.api_scotia.entities.CustomerEntity;
 import com.example.api_scotia.entities.RoleEntity;
 import com.example.api_scotia.exception.custom.BusinessException;
+import com.example.api_scotia.models.request.AuthLoginRequest;
 import com.example.api_scotia.models.request.AuthRegisterRequest;
 import com.example.api_scotia.models.response.CustomerResponse;
 import com.example.api_scotia.repository.CustomerRepository;
@@ -47,6 +48,19 @@ public class UserBusiness {
                     .roles(roles)
                     .build();
             this.customerFinancialInfoService.createCustomerFinancialInfo(request.getFinancialInfoRequest(), this.customerRepository.save(customer));
+        }
+    }
+
+    public CustomerResponse login(AuthLoginRequest request) {
+        Optional<CustomerEntity> findCustomer = this.customerRepository.findByEmail(request.getEmail());
+        if (findCustomer.isEmpty()) {
+            throw new BusinessException(ErrorConstant.GENERIC_ERROR_CODE, ErrorConstant.INVALID_CREDENTIALS_MESSAGE);
+        } else {
+            if (findCustomer.get().getPassword().equals(request.getPassword())) {
+                return this.toResponse(findCustomer.get());
+            } else {
+                throw new BusinessException(ErrorConstant.GENERIC_ERROR_CODE, ErrorConstant.INVALID_CREDENTIALS_MESSAGE);
+            }
         }
     }
 

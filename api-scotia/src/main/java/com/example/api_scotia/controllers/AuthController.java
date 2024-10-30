@@ -1,17 +1,26 @@
 package com.example.api_scotia.controllers;
 
 import com.example.api_scotia.business.UserBusiness;
+import com.example.api_scotia.models.request.AuthLoginRequest;
 import com.example.api_scotia.models.request.AuthRegisterRequest;
 import com.example.api_scotia.models.response.CustomerResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     private final UserBusiness userBusiness;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> createCustomer(@RequestBody AuthLoginRequest request) {
+        this.userBusiness.login(request);
+        return ResponseEntity.ok("Usuario creado correctamente");
+    }
 
     @PostMapping("/createCustomer")
     public ResponseEntity<String> createCustomer(@RequestBody AuthRegisterRequest request) {
