@@ -18,6 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -33,14 +37,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     http.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll();
-
-                    http.requestMatchers(HttpMethod.GET, "/method/get").hasAnyRole("USER", "ADMIN");
-                    http.requestMatchers(HttpMethod.GET, "/method/get").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST, "/method/post").hasAuthority("CREATE");
-                    http.requestMatchers(HttpMethod.DELETE, "/method/delete").hasAuthority("DELETE");
-                    http.requestMatchers(HttpMethod.PUT, "/method/put").hasAuthority("UPDATE");
-
-                    http.anyRequest().denyAll();
+                    http.requestMatchers(PUBLIC_URLS).permitAll().anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
@@ -62,6 +59,18 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        return request -> configuration;
     }
 
     private static final String[] PUBLIC_URLS = {
