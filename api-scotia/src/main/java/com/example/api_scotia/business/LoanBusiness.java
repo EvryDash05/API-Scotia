@@ -8,21 +8,18 @@ import com.example.api_scotia.entities.LoanEntity;
 import com.example.api_scotia.exception.custom.BusinessException;
 import com.example.api_scotia.models.request.LoanRequest;
 import com.example.api_scotia.models.response.LoanResponse;
-import com.example.api_scotia.repository.CustomerPaymentRepository;
 import com.example.api_scotia.repository.CustomerRepository;
 import com.example.api_scotia.repository.LoanRepository;
 import com.example.api_scotia.service.LoanService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.parser.Entity;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoanBusiness implements LoanService {
@@ -30,6 +27,7 @@ public class LoanBusiness implements LoanService {
     private final LoanRepository loanRepository;
     private final CustomerRepository customerRepository;
     private final CustomerPayBusiness customerPayBusiness;
+    private final EmailBusiness emailBusiness;
 
     @Override
     public List<LoanResponse> getAllLoan() {
@@ -51,6 +49,9 @@ public class LoanBusiness implements LoanService {
                     .customer(findCustomer.get())
                     .build();
             this.customerPayBusiness.createCustomerPay(this.loanRepository.save(newLoan));
+            log.info("Se crea el préstamo {}: "+newLoan.toString());
+            this.emailBusiness.sendEmail("loanConfirmationMessage", findCustomer.get().getEmail(),
+                    parametersLoanConfirmationMessage(findCustomer.get(), newLoan));
             return this.toResponse(newLoan);
         } else {
             throw new BusinessException(ErrorConstant.GENERIC_ERROR_CODE, ErrorConstant.CUSTOMER_NOT_FOUND);
@@ -87,6 +88,15 @@ public class LoanBusiness implements LoanService {
 
     private LoanResponse toResponse(LoanEntity entity){
         return new ModelMapper().map(entity, LoanResponse.class);
+    }
+
+    private Map<String, Object> parametersLoanConfirmationMessage(CustomerEntity customer, LoanEntity loan) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", customer.getName());
+        parameters.put("lastName", customer.getLastName());
+        parameters.put("totalAmount", loan.getTotalAmount());
+        parameters.put("installments", loan.getInstallments());
+        return parameters;
     }
 
 }
