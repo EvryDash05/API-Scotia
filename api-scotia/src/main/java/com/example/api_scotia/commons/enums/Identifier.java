@@ -10,7 +10,8 @@ public enum Identifier {
     LOAN("LON"),
     CUSTOMER_PAY("CSP"),
     TRANSACTION("TRS"),
-    FINANCIAL_INFO("INF");
+    FINANCIAL_INFO("INF"),
+    LIQUIDITY_TRANSACTION("LTS");
 
     private final String value;
 

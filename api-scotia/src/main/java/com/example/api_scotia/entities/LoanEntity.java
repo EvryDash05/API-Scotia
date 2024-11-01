@@ -15,6 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = DataBaseConstants.LOAN_TABLE)
