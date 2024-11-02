@@ -59,9 +59,9 @@ public class UserDetailsBusiness implements UserDetailsService {
 
         String username = createUserRequest.getUsername();
         String password = createUserRequest.getPassword();
-        List<String> roles = createUserRequest.getRoles();
 
-        Set<RoleEntity> roleEntitySet = new HashSet<>(roleRepository.findByNameIn(roles));
+        Set<RoleEntity> roleEntitySet = new HashSet<>();
+        roleEntitySet.add(this.roleRepository.findByName("USER"));
 
         if (roleEntitySet.isEmpty()) {
             throw new IllegalArgumentException("The roles specified does not exist.");
