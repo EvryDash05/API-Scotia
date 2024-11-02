@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/api-scotia.iml" filepath="$PROJECT_DIR$/.idea/api-scotia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/API-Scotia.iml" filepath="$PROJECT_DIR$/.idea/API-Scotia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api-scotia/api-scotia.iml" filepath="$PROJECT_DIR$/api-scotia/api-scotia.iml" />
     </modules>
   </component>
 </project>
