@@ -110,6 +110,13 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!--Jasper reports-->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>7.0.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
