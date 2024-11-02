@@ -1,6 +1,7 @@
 package com.example.api_scotia.controllers;
 
 import com.example.api_scotia.models.request.LoanRequest;
+import com.example.api_scotia.models.request.SimulateLoanRequest;
 import com.example.api_scotia.service.LoanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,12 @@ public class LoanController {
     @PostMapping("/createLoan")
     public ResponseEntity<?> createLoan(@RequestBody LoanRequest request){
         return ResponseEntity.ok(loanService.createLoan(request));
+    }
+
+    @PostMapping("/simulateLoan")
+    public ResponseEntity<String> simulateLoan(@RequestBody SimulateLoanRequest request){
+        loanService.simulateLoan(request);
+        return ResponseEntity.ok("Simulación exitosa");
     }
 
 }
