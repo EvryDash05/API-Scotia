@@ -2,17 +2,19 @@ package com.example.api_scotia.models.request;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthRegisterRequest {
-    private String name;
+public class AuthCreateUserRequest {
+    private String username;
     private String lastName;
-    private String numberPhone;
-    private String address;
     private String email;
     private String password;
-    private CustomerFinancialInfoRequest financialInfoRequest;
+    private String phone;
+    private String address;
+    private List<String> roles;
 }
