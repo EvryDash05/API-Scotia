@@ -20,8 +20,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -37,7 +41,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     http.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll();
-                    http.requestMatchers(PUBLIC_URLS).permitAll().anyRequest().authenticated();
+                    http.requestMatchers(PUBLIC_URLS).permitAll();
+                    http.anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
@@ -62,15 +67,20 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-        return request -> configuration;
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.addAllowedHeader(CorsConfiguration.ALL);
+        config.setAllowedMethods(
+                Arrays.asList(
+                        HttpMethod.POST.name(),
+                        HttpMethod.GET.name(),
+                        HttpMethod.PUT.name(),
+                        HttpMethod.DELETE.name()));
+        config.setExposedHeaders(Collections.singletonList(CorsConfiguration.ALL));
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     private static final String[] PUBLIC_URLS = {
