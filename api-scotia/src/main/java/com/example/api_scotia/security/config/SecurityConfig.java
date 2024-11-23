@@ -37,11 +37,12 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationProvider authenticationProvider) throws Exception {
         return httpSecurity
+                .cors(cors -> corsFilter())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
-                    http.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll();
                     http.requestMatchers(PUBLIC_URLS).permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll();
                     http.anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
@@ -84,8 +85,9 @@ public class SecurityConfig {
     }
 
     private static final String[] PUBLIC_URLS = {
+            "/",
             "/v3/api-docs/**",
-            "/swagger-ui./**",
+            "/swagger-ui/**",
             "/swagger-ui.html/**",
             "/auth/**",
     };
