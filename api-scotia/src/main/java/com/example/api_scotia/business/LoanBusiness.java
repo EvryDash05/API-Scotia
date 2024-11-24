@@ -7,6 +7,7 @@ import com.example.api_scotia.entities.CustomerEntity;
 import com.example.api_scotia.entities.LoanEntity;
 import com.example.api_scotia.exception.custom.BusinessException;
 import com.example.api_scotia.models.request.LoanRequest;
+import com.example.api_scotia.models.request.SimulateLoanRequest;
 import com.example.api_scotia.models.response.LoanResponse;
 import com.example.api_scotia.repository.CustomerRepository;
 import com.example.api_scotia.repository.LoanRepository;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -59,6 +62,14 @@ public class LoanBusiness implements LoanService {
     }
 
     @Override
+    public void simulateLoan(SimulateLoanRequest request) {
+        BigDecimal monthlyPaymentAmount = request.getAmount().divide(new BigDecimal(request.getInstallments()), RoundingMode.HALF_UP);
+        log.info("Simulando préstamo");
+        this.emailBusiness.sendEmail("simulateLoanMessage", request.getEmail(),
+                this.parametersSimulateLoanMessage(request, monthlyPaymentAmount));
+    }
+
+    @Override
     public LoanResponse getByLoanId(String id) {
         Optional<LoanEntity> findLoan = this.loanRepository.findById(id);
         if (findLoan.isEmpty()) {
@@ -96,6 +107,17 @@ public class LoanBusiness implements LoanService {
         parameters.put("lastName", customer.getLastName());
         parameters.put("totalAmount", loan.getTotalAmount());
         parameters.put("installments", loan.getInstallments());
+        return parameters;
+    }
+
+    private Map<String, Object> parametersSimulateLoanMessage(SimulateLoanRequest request, BigDecimal quote){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", request.getName());
+        parameters.put("dni", request.getDni());
+        parameters.put("amount", request.getAmount());
+        parameters.put("amountQuote", quote);
+        parameters.put("installments", request.getInstallments());
+        parameters.put("email", request.getEmail());
         return parameters;
     }
 
