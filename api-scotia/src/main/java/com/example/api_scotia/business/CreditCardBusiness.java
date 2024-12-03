@@ -50,7 +50,7 @@ public class CreditCardBusiness implements CreditCardService {
                     .limit(request.getCardLimit())
                     .customer(findCustomer.get())
                     .build();
-
+            this.creditCardRepository.save(newCard);
             return this.toResponse(newCard);
         } else {
             throw new BusinessException(ErrorConstant.GENERIC_ERROR_CODE, ErrorConstant.CUSTOMER_NOT_FOUND);

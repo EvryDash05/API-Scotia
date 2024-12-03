@@ -108,12 +108,23 @@ public class UserDetailsBusiness implements UserDetailsService {
         Authentication authentication = this.authenticate(email, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken = jwtUtils.createToken(authentication);
-        return AuthResponse.builder()
-                .email(email)
-                .message("Login successfully")
-                .token(accessToken)
-                .build();
+        if (authentication.isAuthenticated()) {
+            Optional<CustomerEntity> customerEntity = this.customerRepository.findByEmail(email);
+            List<String> roles = customerEntity.get().getRoles()
+                    .stream().map(RoleEntity::getName).toList();
+            String accessToken = jwtUtils.createToken(authentication);
+
+            return AuthResponse.builder()
+                    .customerId(customerEntity.get().getCustomerId())
+                    .username(customerEntity.get().getName())
+                    .lastName(customerEntity.get().getLastName())
+                    .email(email)
+                    .phone(customerEntity.get().getNumberPhone())
+                    .roles(roles)
+                    .token(accessToken)
+                    .build();
+        }
+        return null;
     }
 
     public Authentication authenticate(String email, String password) {
