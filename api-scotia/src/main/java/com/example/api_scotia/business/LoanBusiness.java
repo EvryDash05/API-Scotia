@@ -97,6 +97,16 @@ public class LoanBusiness implements LoanService {
         return List.of();
     }
 
+    @Override
+    public List<LoanResponse> getLoansByCustomerId(String customerId) {
+        Optional<CustomerEntity> findCustomer = this.customerRepository.findById(customerId);
+        if(findCustomer.isEmpty()) {
+            throw new BusinessException(ErrorConstant.NOT_FOUND_CODE, ErrorConstant.CUSTOMER_NOT_FOUND);
+        }
+        return this.loanRepository.findLoansByCustomerId(customerId).stream().map(this::toResponse)
+                .toList();
+    }
+
     private LoanResponse toResponse(LoanEntity entity){
         return new ModelMapper().map(entity, LoanResponse.class);
     }

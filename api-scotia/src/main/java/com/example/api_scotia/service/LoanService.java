@@ -14,4 +14,5 @@ public interface LoanService {
     LoanResponse updateByLoanId(String id, LoanRequest request);
     void deleteByLoanId(String id);
     List<LoanResponse> sortLoanByRequestDate(String customerId);
+    List<LoanResponse> getLoansByCustomerId(String customerId);
 }

@@ -13,6 +13,7 @@ import com.example.api_scotia.repository.CustomerRepository;
 import com.example.api_scotia.repository.LiquidityTransactionRepository;
 import com.example.api_scotia.service.LiquidityTransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LiquidityTransactionBusiness implements LiquidityTransactionService {
@@ -48,6 +50,7 @@ public class LiquidityTransactionBusiness implements LiquidityTransactionService
                     .liquidityStatus("Pendiente")
                     .creditCard(findCreditCard.get())
                     .build();
+            log.info("Liquidez: {}",newLiquidityTransaction);
             return this.toResponse(liquidityTransactionRepository.save(newLiquidityTransaction));
         }else {
             throw new BusinessException(ErrorConstant.NOT_FOUND_CODE, ErrorConstant.CARD_NOT_FOUND_MESSAGE);
